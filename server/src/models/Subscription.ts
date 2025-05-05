@@ -1,4 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
+import { IUser } from "./User";
+
+export interface ISubscription extends Document {
+    userId: mongoose.Types.ObjectId | IUser;
+    name: string;
+    amount: number;
+    billingCycle: "monthly" | "quarterly" | "yearly";
+    nextBillingDate: Date;
+    reminderDays: number;
+    status: "active" | "inactive";
+    createdAt: Date;
+}
 
 const subscriptionSchema = new mongoose.Schema({
     userId: {
@@ -6,30 +18,32 @@ const subscriptionSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    service: {
+    name: {
         type: String,
         required: true
     },
-    duration: {
+    amount: {
         type: Number,
         required: true
     },
-    price: {
-        type: Number,
+    billingCycle: {
+        type: String,
+        enum: ["monthly", "quarterly", "yearly"],
         required: true
+    },
+    nextBillingDate: {
+        type: Date,
+        required: true
+    },
+    reminderDays: {
+        type: Number,
+        required: true,
+        default: 3
     },
     status: {
         type: String,
         enum: ["active", "inactive"],
         default: "active"
-    },
-    startDate: {
-        type: Date,
-        default: Date.now
-    },
-    dueDate: {
-        type: Date,
-        required: true
     },
     createdAt: {
         type: Date,
@@ -37,7 +51,7 @@ const subscriptionSchema = new mongoose.Schema({
     }
 }); 
 
-const Subscription = mongoose.model("Subscription", subscriptionSchema);
+const Subscription: Model<ISubscription> = mongoose.model<ISubscription>("Subscription", subscriptionSchema);
 
 export default Subscription;
 

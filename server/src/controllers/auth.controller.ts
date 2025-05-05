@@ -16,11 +16,19 @@ interface LoginRequest {
 
 export const register = async (req: Request, res: Response) => {
     try {
+        console.log('Received registration request body:', req.body);
         const { name, email, password }: RegisterRequest = req.body;
 
         if (!name || !email || !password) {
+            console.log('Missing fields:', { 
+                hasName: !!name, 
+                hasEmail: !!email, 
+                hasPassword: !!password 
+            });
             return res.status(400).json({ message: "All fields are required" });
         }
+
+        console.log('Password length received:', password.length);
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {

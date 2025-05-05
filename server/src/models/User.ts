@@ -1,18 +1,16 @@
 import mongoose, { Document, Model } from "mongoose";
 
-interface IUser extends Document {
+export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
     createdAt: Date;
-    subscriptions: mongoose.Types.ObjectId[];
 }
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     email: {
         type: String,
@@ -26,10 +24,6 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    },
-    subscriptions: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "Subscription"
     }
 });
 
